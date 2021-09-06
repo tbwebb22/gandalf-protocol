@@ -132,6 +132,7 @@ contract GandalfPool is
         }
 
         require(gandalfTokenAmountToReceive >= minGandalfTokenAmount, "Minimum gandalf token amount cannot be met");
+        
         _mint(msg.sender, gandalfTokenAmountToReceive);
 
         _rebalance();
