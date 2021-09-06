@@ -113,7 +113,7 @@ contract GandalfPool is
     /// @param minGandalfTokenAmount The minimum amount of the Gandalf token the user is willing to receive
     /// @param deadline The timestamp at which the transaction will expire
     function buyGandalfToken(uint256 token0Amount, uint256 token1Amount, uint256 minGandalfTokenAmount, uint256 deadline) external override {
-        require(token0Amount + token1Amount > 0, "Sum of token amounts must be greater than zero");
+        require(token0Amount.add(token1Amount) > 0, "Sum of token amounts must be greater than zero");
         require(deadline >= block.timestamp, "Transaction deadline expired");
 
         uint256 gandalfTokenAmountToReceive;
@@ -487,10 +487,10 @@ contract GandalfPool is
 
         if(tokenIn < tokenOut) {
             amountOut = FullMath.mulDiv(FullMath.mulDiv(amountIn, sqrtPriceX96, 2**96), sqrtPriceX96, 2**96) 
-                * (FEE_DENOMINATOR - fee) / FEE_DENOMINATOR;
+                .mul(FEE_DENOMINATOR - fee).div(FEE_DENOMINATOR);
         } else {
             amountOut = FullMath.mulDiv(FullMath.mulDiv(amountIn, 2**96, sqrtPriceX96), 2**96, sqrtPriceX96)
-                * (FEE_DENOMINATOR - fee) / FEE_DENOMINATOR;
+                .mul(FEE_DENOMINATOR - fee).div(FEE_DENOMINATOR);
         }
     }
 
@@ -502,7 +502,7 @@ contract GandalfPool is
     function getAmountOutMinimum(address tokenIn, address tokenOut, uint256 amountIn) public view override returns (uint256 amountOutMinimum) {
         uint256 estimatedAmountOut = getEstimatedTokenOut(tokenIn, tokenOut, amountIn, uniswapV3PoolFee);
 
-        amountOutMinimum = estimatedAmountOut * (SLIPPAGE_DENOMINATOR - uniswapV3PoolSlippageNumerator) / SLIPPAGE_DENOMINATOR;
+        amountOutMinimum = estimatedAmountOut.mul(SLIPPAGE_DENOMINATOR - uniswapV3PoolSlippageNumerator).div(SLIPPAGE_DENOMINATOR);
     }
 
     /// @notice Gets the value of token0 and token1 held by this contract in terms of token0 value
@@ -511,7 +511,7 @@ contract GandalfPool is
         uint256 token0Balance = IERC20Upgradeable(token0).balanceOf(address(this));
         uint256 token1Balance = IERC20Upgradeable(token1).balanceOf(address(this));
 
-        return token0Balance + getEstimatedTokenOut(token1, token0, token1Balance, uniswapV3PoolFee);
+        return token0Balance.add(getEstimatedTokenOut(token1, token0, token1Balance, uniswapV3PoolFee));
     }
 
     /// @notice Gets the value of token0 and token1 held by the liquidity position in terms of token0 value
@@ -524,13 +524,13 @@ contract GandalfPool is
             getLiquidityPositionLiquidityAmount()
         );
 
-        return amount0 + getEstimatedTokenOut(token1, token0, amount1, 0);
+        return amount0.add(getEstimatedTokenOut(token1, token0, amount1, 0));
     }
 
     /// @notice Gets the total value (reserves + liquidity position) in terms of token 0 value
     /// @return The total value relative to token0
     function getTotalValueInToken0() public view override returns (uint256) {
-        return getReserveValueInToken0() + getLiquidityPositionValueInToken0();
+        return getReserveValueInToken0().add(getLiquidityPositionValueInToken0());
     }
 
     /// @notice Gets the total value (reserves + liquidity position) in terms of token 0 value
@@ -677,14 +677,14 @@ contract GandalfPool is
     /// @notice Returns the price of the Gandalf token relative to token 0 scaled by 10^18
     /// @return The price in token 0 scaled by 10^18
     function getGandalfTokenPriceInToken0() public view override nonZeroSupply returns (uint256) {
-        return getTotalValueInToken0() * 10 ** decimals() / totalSupply();
+        return getTotalValueInToken0().mul(10 ** decimals()).div(totalSupply());
     }
 
 
     /// @notice Returns the price of the Gandalf token relative to token 1 scaled by 10^18
     /// @return The price in token 1 scaled by 10^18
     function getGandalfTokenPriceInToken1() public view override nonZeroSupply returns (uint256) {
-        return getTotalValueInToken1() * 10 ** decimals() / totalSupply();
+        return getTotalValueInToken1().mul(10 ** decimals()).div(totalSupply());
     }
 
     /// @notice Returns the fee denominator constant
