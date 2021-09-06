@@ -1,0 +1,43 @@
+{
+  "name": "gandalf-protocol",
+  "version": "1.0.0",
+  "description": "A protocol for active Uniswap v3 liquidity management",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "npx hardhat clean",
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "coverage": "npm run build && npx hardhat coverage --temp artifacts --network coverage"
+  },
+  "author": "tbwebb22",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.10",
+    "@nomiclabs/hardhat-etherscan": "^2.1.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@openzeppelin/contracts-upgradeable": "^3.4.2-solc-0.7",
+    "@typechain/ethers-v5": "^7.0.0",
+    "@typechain/hardhat": "^2.0.0",
+    "@types/chai": "^4.2.18",
+    "@types/chai-as-promised": "^7.1.1",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^15.0.3",
+    "@uniswap/v3-core": "^1.0.0",
+    "@uniswap/v3-periphery": "^1.1.1",
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "dotenv": "^9.0.2",
+    "ethereum-waffle": "^3.3.0",
+    "ethers": "^5.4.6",
+    "hardhat": "^2.2.1",
+    "solidity-coverage": "^0.7.16",
+    "ts-generator": "^0.1.1",
+    "ts-node": "^9.1.1",
+    "typechain": "^5.0.0",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "hardhat-deploy": "^0.9.0"
+  }
+}
