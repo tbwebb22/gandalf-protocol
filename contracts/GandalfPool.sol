@@ -132,7 +132,7 @@ contract GandalfPool is
         }
 
         require(gandalfTokenAmountToReceive >= minGandalfTokenAmount, "Minimum gandalf token amount cannot be met");
-        
+
         _mint(msg.sender, gandalfTokenAmountToReceive);
 
         _rebalance();
@@ -680,7 +680,6 @@ contract GandalfPool is
     function getGandalfTokenPriceInToken0() public view override nonZeroSupply returns (uint256) {
         return getTotalValueInToken0().mul(10 ** decimals()).div(totalSupply());
     }
-
 
     /// @notice Returns the price of the Gandalf token relative to token 1 scaled by 10^18
     /// @return The price in token 1 scaled by 10^18
